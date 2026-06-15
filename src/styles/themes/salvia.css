@@ -1,0 +1,25 @@
+/**
+ * Tema "salvia": variante verde sálvia cálida.
+ * Activar con [data-theme="salvia"] en <html>.
+ * Solo redefine los tokens de marca (primary/accent/ring); el resto
+ * de tokens neutros se heredan de base.css.
+ */
+[data-theme="salvia"] {
+  --primary: oklch(0.5 0.09 152);
+  --primary-foreground: oklch(0.98 0.01 152);
+
+  --accent: oklch(0.94 0.03 152);
+  --accent-foreground: oklch(0.3 0.06 152);
+
+  --ring: oklch(0.5 0.09 152);
+}
+
+[data-theme="salvia"].dark {
+  --primary: oklch(0.72 0.1 152);
+  --primary-foreground: oklch(0.18 0.02 152);
+
+  --accent: oklch(0.28 0.04 152);
+  --accent-foreground: oklch(0.9 0.03 152);
+
+  --ring: oklch(0.72 0.1 152);
+}

@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PsicoCMS SV</title>
+    <script>
+      // Aplica el tema (claro/oscuro + variante) antes del primer paint
+      // para evitar el flash de tema incorrecto. Claves sincronizadas
+      // con src/stores/theme-store.ts.
+      (() => {
+        var mode = localStorage.getItem('psicocms-theme-mode');
+        var variant = localStorage.getItem('psicocms-theme-variant');
+        var isDark =
+          mode === 'dark' ||
+          (mode !== 'light' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+        document.documentElement.classList.toggle('dark', isDark);
+        document.documentElement.dataset.theme = variant === 'salvia' ? 'salvia' : 'base';
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
