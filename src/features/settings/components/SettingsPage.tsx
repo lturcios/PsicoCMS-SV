@@ -1,6 +1,7 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 import { ProfileTab } from './tabs/ProfileTab';
+import { ServicesTab } from './tabs/ServicesTab';
 
 export function SettingsPage() {
   return (
@@ -24,7 +25,7 @@ export function SettingsPage() {
           </TabsContent>
 
           <TabsContent value="services">
-            <p className="text-sm text-muted-foreground">Próximamente: gestión de servicios.</p>
+            <ServicesTab />
           </TabsContent>
 
           <TabsContent value="schedule">

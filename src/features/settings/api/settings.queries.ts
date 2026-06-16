@@ -7,6 +7,8 @@ import type { ClinicSettings } from '../types';
 export const settingsKeys = {
   all: ['settings'] as const,
   clinicSettings: () => [...settingsKeys.all, 'clinic-settings'] as const,
+  specialties: () => [...settingsKeys.all, 'specialties'] as const,
+  services: () => [...settingsKeys.all, 'services'] as const,
 };
 
 export function useClinicSettings() {
