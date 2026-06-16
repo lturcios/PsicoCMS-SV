@@ -9,6 +9,8 @@ export const settingsKeys = {
   clinicSettings: () => [...settingsKeys.all, 'clinic-settings'] as const,
   specialties: () => [...settingsKeys.all, 'specialties'] as const,
   services: () => [...settingsKeys.all, 'services'] as const,
+  schedules: () => [...settingsKeys.all, 'schedules'] as const,
+  exceptions: () => [...settingsKeys.all, 'exceptions'] as const,
 };
 
 export function useClinicSettings() {

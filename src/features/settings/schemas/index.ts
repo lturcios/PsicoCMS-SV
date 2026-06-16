@@ -25,3 +25,36 @@ export const serviceSchema = z.object({
 });
 
 export type ServiceFormValues = z.infer<typeof serviceSchema>;
+
+export const dayScheduleSchema = z
+  .object({
+    day_of_week: z.number().int().min(0).max(6),
+    is_active: z.boolean(),
+    start_time: z.string(),
+    end_time: z.string(),
+  })
+  .refine((d) => !d.is_active || d.start_time < d.end_time, {
+    message: 'La hora de fin debe ser posterior a la de inicio',
+    path: ['end_time'],
+  });
+
+export const weeklyScheduleSchema = z.object({
+  days: z.array(dayScheduleSchema),
+});
+
+export type WeeklyScheduleFormValues = z.infer<typeof weeklyScheduleSchema>;
+
+export const exceptionSchema = z
+  .object({
+    date: z.string().min(1, 'Requerido'),
+    type: z.enum(['blocked', 'special_hours']),
+    reason: z.string().max(200, 'Máximo 200 caracteres').optional(),
+    start_time: z.string().optional(),
+    end_time: z.string().optional(),
+  })
+  .refine((d) => d.type !== 'special_hours' || (!!d.start_time && !!d.end_time), {
+    message: 'Se requieren hora de inicio y fin para horario especial',
+    path: ['start_time'],
+  });
+
+export type ExceptionFormValues = z.infer<typeof exceptionSchema>;
