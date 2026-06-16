@@ -1,4 +1,4 @@
-export { useUpdateClinicSettings } from './api/settings.mutations';
+export { useUpdateClinicSettings, useUploadProfilePhoto } from './api/settings.mutations';
 export { settingsKeys, useClinicSettings } from './api/settings.queries';
 export { SettingsPage } from './components/SettingsPage';
 export type { ProfileFormValues } from './schemas';

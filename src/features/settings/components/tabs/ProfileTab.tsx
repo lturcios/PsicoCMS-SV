@@ -1,7 +1,8 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -9,7 +10,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Textarea } from '@/components/ui/textarea';
 import { zodResolver } from '@/lib/zod-resolver';
 
-import { useUpdateClinicSettings } from '../../api/settings.mutations';
+import { useUpdateClinicSettings, useUploadProfilePhoto } from '../../api/settings.mutations';
 import { useClinicSettings } from '../../api/settings.queries';
 import type { ProfileFormValues } from '../../schemas';
 import { profileSchema } from '../../schemas';
@@ -41,6 +42,22 @@ function ProfileTabSkeleton() {
 export function ProfileTab() {
   const settings = useClinicSettings();
   const update = useUpdateClinicSettings();
+  const uploadPhoto = useUploadProfilePhoto();
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  function handlePhotoChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file || !settings.data?.id) return;
+    uploadPhoto.mutate(
+      { id: settings.data.id, file },
+      {
+        onSuccess: () => toast.success('Foto actualizada'),
+        onError: (err) =>
+          toast.error(err instanceof Error ? err.message : 'Error al subir la foto'),
+      },
+    );
+    e.target.value = '';
+  }
 
   const {
     register,
@@ -105,7 +122,42 @@ export function ProfileTab() {
           Aparecen en tu página pública y en las comunicaciones con pacientes.
         </CardDescription>
       </CardHeader>
-      <CardContent>
+      <CardContent className="space-y-6">
+        <div className="flex items-center gap-4">
+          <Avatar className="h-20 w-20">
+            <AvatarImage src={settings.data?.photo_url ?? undefined} alt="Foto de perfil" />
+            <AvatarFallback className="text-lg">
+              {settings.data?.professional_name
+                ? settings.data.professional_name
+                    .split(' ')
+                    .slice(0, 2)
+                    .map((n) => n[0])
+                    .join('')
+                    .toUpperCase()
+                : '?'}
+            </AvatarFallback>
+          </Avatar>
+          <div className="flex flex-col gap-1.5">
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={handlePhotoChange}
+            />
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              disabled={uploadPhoto.isPending}
+              onClick={() => fileInputRef.current?.click()}
+            >
+              {uploadPhoto.isPending ? 'Subiendo...' : 'Cambiar foto'}
+            </Button>
+            <p className="text-xs text-muted-foreground">JPG, PNG o WebP. Máximo 5 MB.</p>
+          </div>
+        </div>
+
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4" noValidate>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div className="flex flex-col gap-1.5">
