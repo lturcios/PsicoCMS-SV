@@ -7,45 +7,45 @@
 
 ## 🔧 Preparación del entorno (pre-Fase 0)
 - [ ] Instalar Claude Code (CLI o extensión VSCode) y autenticar
-- [ ] Crear repo en GitHub → conectar **GitHub MCP**
+- [x] Crear repo en GitHub → conectar **GitHub MCP**
 - [ ] Crear proyecto en **Supabase** → conectar **Supabase MCP** (read-only por defecto)
-- [ ] Conectar repo a **Vercel** → **Vercel MCP**
+- [x] Conectar repo a **Vercel** → **Vercel MCP**
 - [ ] Conectar **Context7 MCP** y **Playwright MCP**
 - [ ] Crear cuentas Free: **Resend** y **Cloudinary**
-- [ ] Crear `.claude/CLAUDE.md` con reglas no negociables
-- [ ] Crear las 11 skills en `.claude/skills/`
-- [ ] Crear `PROGRESO.md` y `PROMPT-FASE-0.md`
+- [x] Crear `.claude/CLAUDE.md` con reglas no negociables
+- [x] Crear las 11 skills en `.claude/skills/`
+- [~] Crear `PROGRESO.md` y `PROMPT-FASE-0.md` (PROGRESO.md ✅; PROMPT-FASE-0.md pendiente)
 
 ---
 
-## 🏗️ Fase 0 — Cimientos y entorno
-- [ ] Inicializar proyecto con **pnpm** + Vite 6 + React 19
-- [ ] TypeScript en modo **strict**
-- [ ] Tailwind CSS v4 configurado
-- [ ] shadcn/ui instalado y funcionando
-- [ ] Design tokens base (CSS variables) definidos
-- [ ] Modo claro/oscuro con persistencia (Zustand)
-- [ ] Biome (lint + format) configurado
-- [ ] Lefthook (pre-commit) configurado
-- [ ] Vitest configurado con un test de humo
-- [ ] Cliente de Supabase conectado + tipos generados
-- [ ] React Router 7 con layout base
-- [ ] Primer deploy en Vercel (shell vacío)
-- [ ] GitHub Actions: lint + typecheck + test en verde
-- [ ] **Criterio:** push → CI verde → deploy automático ✔️
+## 🏗️ Fase 0 — Cimientos y entorno (✅ completa — ver PROGRESO.md)
+- [x] Inicializar proyecto con **pnpm** + Vite 6 + React 19
+- [x] TypeScript en modo **strict**
+- [x] Tailwind CSS v4 configurado
+- [x] shadcn/ui instalado y funcionando
+- [x] Design tokens base (CSS variables) definidos
+- [x] Modo claro/oscuro con persistencia (Zustand)
+- [x] Biome (lint + format) configurado
+- [x] Lefthook (pre-commit) configurado
+- [x] Vitest configurado con un test de humo
+- [x] Cliente de Supabase conectado + tipos generados
+- [x] React Router 7 con layout base
+- [x] Primer deploy en Vercel (shell vacío)
+- [x] GitHub Actions: lint + typecheck + test en verde
+- [x] **Criterio:** push → CI verde → deploy automático ✔️
 
 ---
 
-## 🔐 Fase 1 — Auth + multi-tenant
-- [ ] Supabase Auth (email/contraseña + magic link)
-- [ ] Tablas `tenants` y `profiles` con `tenant_id`
-- [ ] **RLS** habilitado en todas las tablas
-- [ ] **Auth Hook** que inyecta `tenant_id` y `role` en el JWT
-- [ ] Onboarding: alta de profesional → crea tenant + perfil + slug
-- [ ] Rutas protegidas + contexto de tenant
-- [ ] Layout del panel (sidebar + topbar)
-- [ ] Roles Owner / Asistente (base)
-- [ ] **Criterio:** dos cuentas no ven datos entre sí (probado) ✔️
+## 🔐 Fase 1 — Auth + multi-tenant (✅ completa)
+- [x] Supabase Auth (email/contraseña + magic link)
+- [x] Tablas `tenants` y `profiles` con `tenant_id`
+- [x] **RLS** habilitado en todas las tablas
+- [x] **Auth Hook** que inyecta `tenant_id` y `role` en el JWT
+- [x] Onboarding: alta de profesional → crea tenant + perfil + slug
+- [x] Rutas protegidas + contexto de tenant
+- [x] Layout del panel (sidebar + topbar)
+- [x] Roles Owner / Asistente (base)
+- [x] **Criterio:** dos cuentas no ven datos entre sí (probado) ✔️
 
 ---
 
