@@ -7,9 +7,9 @@
 
 ## Estado actual
 
-- **Fase actual:** Fase 1 — Auth + multi-tenant → **COMPLETA** ✅ (6/6 bloques)
-- **Próxima fase:** Fase 2 — Configuración del consultorio
-- **Última actualización:** 2026-06-15
+- **Fase actual:** Fase 2 — Configuración del consultorio → **COMPLETA** ✅ (6/6 bloques)
+- **Próxima fase:** Fase 3 — Pacientes
+- **Última actualización:** 2026-06-16
 
 ---
 
@@ -101,6 +101,54 @@
 
 ---
 
+---
+
+## Fase 2 — Configuración del consultorio (✅ completa)
+
+### Bloque 1 — BD: 5 tablas + triggers + RPC
+- Migración `20260616010000_fase2_settings_schema.sql`: tablas `clinic_settings`, `specialties`, `services`, `availability_schedules`, `availability_exceptions`.
+- Trigger `set_tenant_id()` en INSERT de cada tabla: fuerza `tenant_id = current_tenant_id()` — el cliente no puede forjar datos de otro tenant.
+- Trigger `handle_updated_at()` en UPDATE de tablas con `updated_at`.
+- RPC `create_tenant_for_user` extendido: inserta fila vacía en `clinic_settings` al crear el tenant (backfill manual para tenants existentes).
+- `supabase gen types` regenerado → `src/lib/supabase/database.types.ts`.
+
+### Bloque 2 — Feature shell + ProfileTab
+- `src/features/settings/`: estructura feature-based completa (types, schemas, api, components).
+- `useClinicSettings()` con `.single()` (backfill garantiza 1 fila por tenant); `useUpdateClinicSettings()` actualiza por `id` (RLS valida tenant).
+- `settingsKeys` factory para TanStack Query (clave compartida entre tabs).
+- `ProfileTab`: nombre, título, colegiatura (JVPP), bio. Skeleton + error state. Patrón `useEffect + reset()` para sincronizar form con datos del servidor.
+- `SettingsPage` con 4 tabs (Perfil, Servicios, Horario, Contacto). Ruta `/panel/config`.
+
+### Bloque 3 — Foto de perfil (Cloudinary)
+- `src/lib/cloudinary/upload.ts`: upload unsigned directo al browser (`FormData` → API REST de Cloudinary). `validateImageFile()`: tipo imagen + 5 MB máx.
+- `useUploadProfilePhoto()`: valida → sube a Cloudinary → guarda `secure_url` en `clinic_settings.photo_url`.
+- `ProfileTab`: sección de avatar con `Avatar` shadcn/ui + fallback de iniciales + botón "Cambiar foto".
+- **Configuración requerida:** crear upload preset "unsigned" en Cloudinary (nombre libre) y setear `VITE_CLOUDINARY_CLOUD_NAME` + `VITE_CLOUDINARY_UPLOAD_PRESET` en `.env.local`.
+- **Pendiente:** logo (`logo_url`) — queda para iteración posterior.
+
+### Bloque 4 — Especialidades + servicios CRUD
+- `specialties`: chips con inline add/delete. `sort_order DEFAULT 0` en BD.
+- `services`: lista con dialog para crear/editar. Campos: nombre, descripción, modalidad (presencial/online/ambas), duración (min), precio (US$), activo.
+- Schema `serviceSchema` usa `z.coerce.number()` para manejar valores string de inputs tipo `number`.
+- `useCreateSpecialty/Service`: pasan `tenant_id: ''` — el trigger `set_tenant_id()` lo reemplaza antes del INSERT (patrón replicado en bloques 5 y 6).
+- shadcn/ui instalados: `dialog`, `switch`, `badge`.
+
+### Bloque 5 — Horarios + excepciones
+- `availability_schedules`: upsert de 7 filas con `onConflict: 'tenant_id,day_of_week'`. Trigger `set_tenant_id()` se ejecuta en INSERT antes de la detección de conflicto → upsert correcto.
+- `WeeklyScheduleSection`: 7 días (Lun–Dom), Switch por día + time inputs (`HH:MM`). Conversión `HH:MM` ↔ `HH:MM:SS` para PostgreSQL `time`.
+- `availability_exceptions`: add/delete. Tipo `blocked` (día completo) o `special_hours` (requiere start/end time — validado con Zod `.refine()`).
+- `ScheduleTab`: formulario de horario semanal con botón "Guardar" + sección de excepciones con dialog.
+
+### Bloque 6 — Contacto + política de atención ✅
+- `ContactTab`: dos Cards independientes (contacto/ubicación y política).
+- **ContactCard**: celular, WhatsApp (+503), departamento (select con 14 departamentos de El Salvador), municipio, dirección, Instagram URL, Facebook URL, sitio web. URLs validadas: deben comenzar con `https://`.
+- **PolicyCard**: `cancellation_hours` (horas antes para cancelar) + `min_advance_hours` (antelación mínima para reservar). Ambos `number NOT NULL DEFAULT 24` en BD.
+- Mismos hooks `useClinicSettings` + `useUpdateClinicSettings` compartidos por todos los tabs — consulta cacheada en TanStack Query.
+
+**Criterio de aceptación Fase 2 cumplido:** todos los datos (perfil, especialidades, servicios, horarios, excepciones, contacto, política) se guardan en BD con aislamiento por tenant y están disponibles para ser consumidos por el motor de reservas y la página pública. ✔️
+
+---
+
 ## Decisiones técnicas relevantes (transversales)
 
 - Aislamiento de tests Vitest requiere `afterEach(() => cleanup())` manual en `src/test/setup.ts` (no alcanza con `@testing-library/react` solo).
@@ -119,12 +167,10 @@
 
 ## Próximo paso
 
-**Fase 2 — Configuración del consultorio** (`docs/04-Plan-de-Fases.md`):
-- Datos del profesional (nombre, título, colegiatura JVPP, bio).
-- Foto de perfil y logo (Cloudinary — activos públicos).
-- Especialidades, servicios con precio US$ y duración.
-- Horarios de disponibilidad + excepciones + feriados SV.
-- Política de cancelación y antelación mínima.
-- Contacto: celular +503, departamento/municipio.
-- **Criterio de aceptación:** datos configurados alimentan booking y página pública.
-- Skills: 02, 04 · MCPs: Supabase, Cloudinary.
+**Fase 3 — Pacientes** (`docs/04-Plan-de-Fases.md`):
+- CRUD de pacientes: nombre, DUI, celular, email, fecha de nacimiento, sexo.
+- Datos del encargado si es menor de edad.
+- Motivo de consulta, notas internas, estado (activo/alta/inactivo).
+- Buscador y listado paginado; historial de citas (placeholder hasta Fase 4).
+- **Criterio de aceptación:** validación de DUI; búsqueda rápida; aislamiento por tenant verificado.
+- Skills: 06, 02, 04 · MCPs: Supabase.

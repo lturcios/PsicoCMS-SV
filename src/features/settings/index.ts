@@ -11,14 +11,18 @@ export { settingsKeys, useClinicSettings } from './api/settings.queries';
 export { useCreateSpecialty, useDeleteSpecialty, useSpecialties } from './api/specialties';
 export { SettingsPage } from './components/SettingsPage';
 export type {
+  ContactFormValues,
   ExceptionFormValues,
+  PolicyFormValues,
   ProfileFormValues,
   ServiceFormValues,
   SpecialtyFormValues,
   WeeklyScheduleFormValues,
 } from './schemas';
 export {
+  contactSchema,
   exceptionSchema,
+  policySchema,
   profileSchema,
   serviceSchema,
   specialtySchema,

@@ -49,16 +49,16 @@
 
 ---
 
-## ⚙️ Fase 2 — Configuración del consultorio
-- [ ] Datos del profesional (nombre, título, colegiatura/JVPP, bio)
-- [ ] Foto de perfil y logo (Cloudinary)
-- [ ] Especialidades
-- [ ] Servicios con precio US$ (en línea / presencial + duración)
-- [ ] Horarios de disponibilidad por día
-- [ ] Excepciones/bloqueos + feriados SV
-- [ ] Política de cancelación y antelación mínima
-- [ ] Contacto: celular +503, departamento/municipio, redes, WhatsApp
-- [ ] **Criterio:** datos alimentan booking y página pública ✔️
+## ⚙️ Fase 2 — Configuración del consultorio (✅ completa)
+- [x] Datos del profesional (nombre, título, colegiatura/JVPP, bio)
+- [x] Foto de perfil (Cloudinary) · logo pendiente
+- [x] Especialidades
+- [x] Servicios con precio US$ (en línea / presencial + duración)
+- [x] Horarios de disponibilidad por día
+- [x] Excepciones/bloqueos + feriados SV
+- [x] Política de cancelación y antelación mínima
+- [x] Contacto: celular +503, departamento/municipio, redes, WhatsApp
+- [x] **Criterio:** datos alimentan booking y página pública ✔️
 
 ---
 

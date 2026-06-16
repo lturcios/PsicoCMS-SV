@@ -58,3 +58,29 @@ export const exceptionSchema = z
   });
 
 export type ExceptionFormValues = z.infer<typeof exceptionSchema>;
+
+const urlField = z
+  .string()
+  .max(200)
+  .refine((v) => !v || v.startsWith('https://'), { message: 'Debe comenzar con https://' })
+  .optional();
+
+export const contactSchema = z.object({
+  phone: z.string().max(20).optional(),
+  whatsapp: z.string().max(20).optional(),
+  department: z.string().max(100).optional(),
+  municipality: z.string().max(100).optional(),
+  address: z.string().max(300, 'Máximo 300 caracteres').optional(),
+  instagram_url: urlField,
+  facebook_url: urlField,
+  website_url: urlField,
+});
+
+export type ContactFormValues = z.infer<typeof contactSchema>;
+
+export const policySchema = z.object({
+  cancellation_hours: z.coerce.number().int().min(0, 'Mínimo 0 horas'),
+  min_advance_hours: z.coerce.number().int().min(0, 'Mínimo 0 horas'),
+});
+
+export type PolicyFormValues = z.infer<typeof policySchema>;
