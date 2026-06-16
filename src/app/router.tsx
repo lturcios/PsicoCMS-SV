@@ -5,6 +5,7 @@ import { PublicLayout } from '@/components/layout/PublicLayout';
 import { AuthGuard, LoginPage, OnboardingPage, RegisterPage } from '@/features/auth';
 import { DashboardPage } from '@/features/dashboard';
 import { HomePage, NotFoundPage } from '@/features/public-site';
+import { SettingsPage } from '@/features/settings';
 
 export const routes: RouteObject[] = [
   {
@@ -23,7 +24,10 @@ export const routes: RouteObject[] = [
       {
         path: '/panel',
         element: <PanelLayout />,
-        children: [{ index: true, element: <DashboardPage /> }],
+        children: [
+          { index: true, element: <DashboardPage /> },
+          { path: 'config', element: <SettingsPage /> },
+        ],
       },
     ],
   },
